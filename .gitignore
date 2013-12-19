@@ -9,3 +9,6 @@
 node_modules/*
 spec/ember-admin_spec.js
 .sass-cache/
+vendor/
+tmp/
+bower_components/

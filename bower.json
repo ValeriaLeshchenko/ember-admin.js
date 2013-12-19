@@ -1,23 +1,18 @@
 {
-  "name": "ember-admin.js",
-  "version": "0.0.1",
-  "homepage": "https://github.com/ember-admin/ember-admin.js",
-  "authors": [
-    "Opak Alex <opak.alexandr@gmail.com>"
-  ],
-  "description": "Admin framework in Ember.js",
-  "main": "Gruntfile.js",
-  "keywords": [
-    "admin",
-    "js.",
-    "ember.js"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests",
-    ".sass-cache"
-  ]
+  "name": "ember-app-kit",
+  "dependencies": {
+    "handlebars": "~1.1.2",
+    "jquery": "~1.9.1",
+    "qunit": "~1.12.0",
+    "ember": "~1.2.0",
+    "ember-data": "~1.0.0-beta.3",
+    "ember-resolver": "git://github.com/stefanpenner/ember-jj-abrams-resolver.git#master",
+    "ic-ajax": "~0.2",
+    "ember-testing-httpRespond": "~0.1.1",
+    "emblem.js": "*"
+  },
+  "resolutions": {
+    "ember": "~1.2.0",
+    "handlebars": "~1.1.2"
+  }
 }

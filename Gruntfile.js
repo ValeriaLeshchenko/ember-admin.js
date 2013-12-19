@@ -1,118 +1,236 @@
 module.exports = function(grunt) {
+  // To support Coffeescript, SASS, LESS and others, just install
+  // the appropriate grunt package and it will be automatically included
+  // in the build process:
+  //
+  // * for Coffeescript, run `npm install --save-dev grunt-contrib-coffee`
+  //
+  // * for SCSS (without SASS), run `npm install --save-dev grunt-sass`
+  // * for SCSS/SASS support (may be slower), run
+  //   `npm install --save-dev grunt-contrib-sass`
+  //   This depends on the ruby sass gem, which can be installed with
+  //   `gem install sass`
+  // * for Compass, run `npm install --save-dev grunt-contrib-compass`
+  //   This depends on the ruby compass gem, which can be installed with
+  //   `gem install compass`
+  //   You should not install SASS if you have installed Compass.
+  //
+  // * for LESS, run `npm install --save-dev grunt-contrib-less`
+  //
+  // * for Stylus/Nib, `npm install --save-dev grunt-contrib-stylus`
+  //
+  // * for Emblem, run the following commands:
+  //   `npm uninstall --save-dev grunt-ember-templates`
+  //   `npm install --save-dev grunt-emblem`
+  //   `bower install emblem.js --save`
+  //
+  // * For EmberScript, run `npm install --save-dev grunt-ember-script`
+  //
+  // * for LiveReload, `npm install --save-dev connect-livereload`
+  //
+  // * for displaying the execution time of the grunt tasks,
+  //   `npm install --save-dev time-grunt`
+  //
+  // * for minimizing the index.html at the end of the dist task
+  //   `npm install --save-dev grunt-contrib-htmlmin`
+  //
+  // * for minimizing images in the dist task
+  //   `npm install --save-dev grunt-contrib-imagemin`
+  //
 
-    grunt.initConfig({
+  var Helpers = require('./tasks/helpers'),
+      filterAvailable = Helpers.filterAvailableTasks,
+      _ = grunt.util._,
+      path = require('path');
 
-        pkg: grunt.file.readJSON('package.json'),
+  Helpers.pkg = require("./package.json");
 
-        coffee: {
-            compile: {
-                files: {
-                    'dist/ember-admin.js': [
-                      'src/application/namespace.coffee',
-                      'src/application/dsl/*.coffee',
-                      'src/application/logics/*.coffee',
-                      'src/application/mixins/**/*.coffee',
-                      'src/application/routes/main_route.coffee',
-                      'src/application/config.coffee',
-                      'src/application/navigation.coffee',
-                      'src/application/views/base/actions/base_action_view.coffee',
-                      'src/application/controllers/base/admin_base_controller.coffee',
-                      'src/application/controllers/base/admin_table_view_controller.coffee',
-                      'src/application/forms/*.coffee',
-                      'src/application/helpers/*.coffee',
-                      'src/application/views/**/*.coffee',
-                      'src/application/routes/**/*.coffee',
-                      'src/application/controllers/**/*.coffee',
-                      'src/application/form_config.coffee',
-                      'src/application/adapters/*.coffee'
-                    ],
+  if (Helpers.isPackageAvailable("time-grunt")) {
+    require("time-grunt")(grunt);
+  }
 
-                    'spec/ember-admin_spec.js': [
-                        'spec/env.coffee',
-                        'spec/**/*.coffee'
-                    ],
-                    'dist/ember-admin-resolver.js':[
-                      'src/application/resolver.coffee'
-                    ]
-                }
-            }
-        },
+  // Loads task options from `tasks/options/`
+  // and loads tasks defined in `package.json`
+  var config = require('load-grunt-config')(grunt, {
+    defaultPath: path.join(__dirname, 'tasks/options'),
+    configPath: path.join(__dirname, 'tasks/custom'),
+    init: false
+  });
+  grunt.loadTasks('tasks'); // Loads tasks in `tasks/` folder
 
-        emblem: {
-            compile: {
-                files: {
-                    'dist/templates.js': ['src/application/templates/ember-admin/**/*.emblem']
-                },
-                options: {
-                    root: 'src/application/templates/',
-                    dependencies: {
-                        jquery: 'vendor/jquery.js',
-                        ember: 'vendor/ember.js',
-                        emblem: 'vendor/emblem.js',
-                        handlebars: 'vendor/handlebars.js'
-                    }
-                }
-            }
-        },
+  config.env = process.env;
 
-        uglify: {
-            options: { mangle: false, compress: false },
+  
 
-            dist: {
-                src: ['src/ember-easyForm.js', 'src/jquery.cookie.js', 'dist/ember-admin.js', 'dist/templates.js'],
-                dest: 'dist/ember-admin.min.js'
-            }
-        },
 
-        jasmine: {
-            pivotal: {
-                src: [
-                    'vendor/jquery.js',
-                    'vendor/handlebars.js',
-                    'vendor/ember.js',
-                    'vendor/ember-data.js',
-                    'src/ember-easyForm.js',
-                    'src/jquery.cookie.js',
-                    'dist/ember-admin.js',
-                    'dist/templates.js'
-                ],
+  // App Kit's Main Tasks
+  // ====================
 
-                options: {
-                    specs: 'spec/ember-admin_spec.js'
-                }
-            }
-        },
 
-        curl: {
-          ember: {
-            src: 'http://builds.emberjs.com/canary/ember.js',
-            dest: 'vendor/ember.js'
-          },
+  // Generate the production version
+  // ------------------
+  grunt.registerTask('dist', "Build a minified & production-ready version of your app.", [
+                     'clean:dist',
+                     'build:dist',
+                     'copy:assemble',
+                     'createDistVersion'
+                     ]);
 
-          ember_data: {
-            src: 'http://builds.emberjs.com/canary/ember-data.js',
-            dest: 'vendor/ember-data.js'
-          }
-        },
-        sass: {
-            dist: {
-                files: {
-                    'dist/ember-admin.css': 'src/ember-admin.scss'
-                }
-            }
-        }
 
+  // Default Task
+  // ------------------
+  grunt.registerTask('default', "Build (in debug mode) & test your application.", ['test']);
+
+
+  // Servers
+  // -------------------
+  grunt.registerTask('server', "Run your server in development mode, auto-rebuilding when files change.", function(proxyMethod) {
+    var expressServerTask = 'expressServer:debug';
+    if (proxyMethod) {
+      expressServerTask += ':' + proxyMethod;
+    }
+
+    grunt.task.run(['clean:debug',
+                    'build:debug',
+                    expressServerTask,
+                    'watch'
+                    ]);
+  });
+
+  grunt.registerTask('server:dist', "Build and preview a minified & production-ready version of your app.", [
+                     'dist',
+                     'expressServer:dist:keepalive'
+                     ]);
+
+
+  // Testing
+  // -------
+  grunt.registerTask('test', "Run your apps's tests once. Uses Google Chrome by default. Logs coverage output to tmp/result/coverage.", [
+                     'clean:debug', 'build:debug', 'karma:test' ]);
+
+  grunt.registerTask('test:ci', "Run your app's tests in PhantomJS. For use in continuous integration (i.e. Travis CI).", [
+                     'clean:debug', 'build:debug', 'karma:ci' ]);
+
+  grunt.registerTask('test:browsers', "Run your app's tests in multiple browsers (see tasks/options/karma.js for configuration).", [
+                     'clean:debug', 'build:debug', 'karma:browsers' ]);
+
+  grunt.registerTask('test:server', "Start a Karma test server and the standard development server.", function(proxyMethod) {
+    var expressServerTask = 'expressServer:debug';
+    if (proxyMethod) {
+      expressServerTask += ':' + proxyMethod;
+    }
+
+    grunt.task.run(['clean:debug',
+                    'build:debug',
+                    'karma:server',
+                    expressServerTask,
+                    'addKarmaToWatchTask',
+                    'watch'
+                    ]);
+  });
+
+  // Worker tasks
+  // =================================
+
+  grunt.registerTask('build:dist', [
+                     'createResultDirectory', // Create directoy beforehand, fixes race condition
+                     'concurrent:buildDist', // Executed in parallel, see config below
+                     ]);
+
+  grunt.registerTask('build:debug', [
+                     'jshint:tooling',
+                     'createResultDirectory', // Create directoy beforehand, fixes race condition
+                     'concurrent:buildDebug', // Executed in parallel, see config below
+                     ]);
+
+  grunt.registerTask('createDistVersion', filterAvailable([
+                     'useminPrepare', // Configures concat, cssmin and uglify
+                     'concat', // Combines css and javascript files
+
+                     'cssmin', // Minifies css
+                     'uglify', // Minifies javascript
+                     'imagemin', // Optimizes image compression
+                     // 'svgmin',
+                     'copy:dist', // Copies files not covered by concat and imagemin
+
+                     'rev', // Appends 8 char hash value to filenames
+                     'usemin', // Replaces file references
+                     'htmlmin:dist' // Removes comments and whitespace
+                     ]));
+
+  // Parallelize most of the build process
+  _.merge(config, {
+    concurrent: {
+      buildDist: [
+        "buildTemplates:dist",
+        "buildScripts",
+        "buildStyles",
+        "buildIndexHTML:dist"
+      ],
+      buildDebug: [
+        "buildTemplates:debug",
+        "buildScripts",
+        "buildStyles",
+        "buildIndexHTML:debug"
+      ]
+    }
+  });
+
+  // Templates
+  grunt.registerTask('buildTemplates:dist', filterAvailable([
+                     'emblem:compile',
+                     'emberTemplates:dist'
+                     ]));
+
+  grunt.registerTask('buildTemplates:debug', filterAvailable([
+                     'emblem:compile',
+                     'emberTemplates:debug'
+                     ]));
+
+  // Scripts
+  grunt.registerTask('buildScripts', filterAvailable([
+                     'jshint:app',
+                     'jshint:tests',
+                     'coffee',
+                     'emberscript',
+                     'copy:javascriptToTmp',
+                     'transpile',
+                     'concat_sourcemap'
+                     ]));
+
+  // Styles
+  grunt.registerTask('buildStyles', filterAvailable([
+                     'compass:compile',
+                     'sass:compile',
+                     'less:compile',
+                     'stylus:compile',
+                     'copy:cssToResult'
+                     // ToDo: Add 'autoprefixer'
+                     ]));
+
+  // Index HTML
+  grunt.registerTask('buildIndexHTML:dist', [
+                     'preprocess:indexHTMLDistApp',
+                     'preprocess:indexHTMLDistTests'
+                     ]);
+
+  grunt.registerTask('buildIndexHTML:debug', [
+                     'preprocess:indexHTMLDebugApp',
+                     'preprocess:indexHTMLDebugTests'
+                     ]);
+
+  // Appends `karma:server:run` to every watch target's tasks array
+  grunt.registerTask('addKarmaToWatchTask', function() {
+    _.forIn(grunt.config('watch'), function(config, key) {
+      if (key === 'options') { return; }
+      config.tasks.push('karma:server:run');
+      grunt.config('watch.' + key, config);
     });
+  });
+  
+  grunt.registerTask('createResultDirectory', function() {
+    grunt.file.mkdir('tmp/result');
+  });
 
-    grunt.loadNpmTasks('grunt-contrib-coffee');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-emblem');
-    grunt.loadNpmTasks('grunt-curl');
-    grunt.loadNpmTasks('grunt-contrib-sass');
-
-
-    grunt.registerTask('default', ['coffee', 'emblem', 'uglify', 'sass']);
-    grunt.registerTask('spec', ['coffee', 'emblem', 'jasmine:pivotal']);
-    grunt.registerTask('update_ember', ['curl:ember', 'curl:ember_data']);
+  grunt.initConfig(config);
 };
