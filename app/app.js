@@ -20,7 +20,7 @@ var AdminResolver = Resolver.default.extend({
   resolveController: function(parsedName){
     this.useRouterNaming(parsedName);
     if (this._checkResourceController(parsedName.fullName)){
-      this._setNames(parsedName)
+      this._setNames(parsedName);
     }
     if (this.resolveOther(parsedName)){
       return this.resolveOther(parsedName);
@@ -34,7 +34,7 @@ var AdminResolver = Resolver.default.extend({
   },
 
   _checkRouteName: function(name){
-      return 'route:application route:basic route:loading route:error'.w().indexOf(name) >= 0
+      return 'route:application route:basic route:loading route:error'.w().indexOf(name) >= 0;
   },
 
   _checkResourceController: function (name){
