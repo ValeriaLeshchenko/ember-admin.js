@@ -1,14 +1,13 @@
-//import MetaRoute from "app/dsl/meta_route";
-
-//console.log(MetaRoute);
+import MetaRoute from "appkit/dsl/meta_route";
 
 var Router = Ember.Router.extend(); // ensure we don't share routes between all Router instances
 
 Router.map(function() {
   this.route('dashboard', {path: '/'});
-  this.resource('posts', function() {
-     this.route('new');
-  });
+});
+
+MetaRoute.map(Router, function() {
+  this.resources("products");
 });
 
 export default Router;

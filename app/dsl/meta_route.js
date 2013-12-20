@@ -1,15 +1,24 @@
+// This module create routes for resources with
+// Show Edit New and pagination pages
+//
+// MetaRoute.map(Router, function(){
+//   this.resources("posts")
+// });
+//
+
 var MetaRoute = (function() {
 
   function MetaRoute() {}
 
-  MetaRoute.map = function(callback) {
+  MetaRoute.map = function(Router, callback) {
+    MetaRoute.Router = Router;
     return callback.call(new MetaRoute());
   };
 
   MetaRoute.prototype.resources = function(name) {
     var self;
     self = this;
-    return Admin.Router.map(function() {
+    return MetaRoute.Router.map(function() {
       this.route(name, {
         path: "/" + name
       });
