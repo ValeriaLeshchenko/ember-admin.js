@@ -1,6 +1,8 @@
 
 //Todo import Config
 
+import Config from "appkit/logic/config";
+
 var Breadcrumbs = Ember.Object.extend();
 
 Breadcrumbs.reopenClass({
@@ -38,8 +40,8 @@ Breadcrumbs.reopenClass({
     return this._actions(action, controller);
   },
   _url: function(url) {
-    if (Admin.Logics.Config.get('namescpace')) {
-      return "/%@%@".fmt(Admin.Logics.Config.get('namescpace'), url);
+    if (Config.get('namescpace')) {
+      return "/%@%@".fmt(Config.get('namescpace'), url);
     } else {
       return url;
     }

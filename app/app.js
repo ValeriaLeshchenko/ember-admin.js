@@ -1,5 +1,6 @@
 import Resolver from 'resolver';
 
+
 var AdminResolver = Resolver.default.extend({
 
   resolveRoute: function (parsedName){
@@ -18,11 +19,15 @@ var AdminResolver = Resolver.default.extend({
   },
 
   resolveController: function(parsedName){
+
     this.useRouterNaming(parsedName);
+
     if (this._checkResourceController(parsedName.fullName)){
       this._setNames(parsedName);
     }
+    console.log(parsedName);
     if (this.resolveOther(parsedName)){
+
       return this.resolveOther(parsedName);
     }
     else {
@@ -52,7 +57,7 @@ var AdminResolver = Resolver.default.extend({
   },
 
   _pattern: function(){
-    return /(Show)|(Edit)|(New)|(Page)/;
+    return /([Ss]how\/)|([Ee]dit\/)|([Nn]ew\/)|([Pp]age)/;
   }
 });
 
@@ -63,6 +68,7 @@ var App = Ember.Application.extend({
   LOG_TRANSITIONS: true,
   LOG_TRANSITIONS_INTERNAL: true,
   LOG_VIEW_LOOKUPS: true,
+  ENABLE_ALL_FEATURES: true,
   modulePrefix: 'appkit', // TODO: loaded via config
   Resolver: AdminResolver
 

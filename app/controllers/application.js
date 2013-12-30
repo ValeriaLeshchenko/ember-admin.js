@@ -1,1 +1,2 @@
-export default Ember.Controller.extend();
+import TableController from 'appkit/controllers/base/table';
+export default TableController.extend();

@@ -1,4 +1,4 @@
-import Attributes from 'app/dsl/attributes';
+import Attributes from 'appkit/dsl/attributes';
 
 export default Ember.Mixin.create({
 

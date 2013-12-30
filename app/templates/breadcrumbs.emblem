@@ -1,0 +1,10 @@
+ul.breadcrumb
+  each breadcrumb in controller
+    if breadcrumb.active
+      li{{bind-attr class="breadcrumb.class"}}
+        = breadcrumb.name
+    else
+      li{{bind-attr class="breadcrumb.class"}}
+
+        view "base/breadcrumbs" urlBinding="breadcrumb.url" href="#"
+          = breadcrumb.name

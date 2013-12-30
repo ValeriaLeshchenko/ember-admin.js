@@ -1,0 +1,19 @@
+.btn-group.per-page
+  view 'base/pagination/per_page' count=25
+    |25
+  view 'base/pagination/per_page' count=50
+    |50
+  view 'base/pagination/per_page' count=100
+    |100
+
+ul class="pager"
+  li
+    view 'base/pagination/link' type="prev"
+      |Previous
+  li
+    view 'base/pagination/link' type="next"
+      |Next
+      
+.page-number
+  |Page&nbsp;
+  = controller.__page

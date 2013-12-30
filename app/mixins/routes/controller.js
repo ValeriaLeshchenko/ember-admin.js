@@ -1,5 +1,5 @@
-
-//Todo add Logic import
+import Breadcrumbs from "appkit/logic/breadcrumbs";
+import SiteTile from "appkit/logic/site_title";
 
 var ControllerMixin = Ember.Mixin.create({
   _getForm: function(controller) {
@@ -30,11 +30,12 @@ var ControllerMixin = Ember.Mixin.create({
   _setActiveRoute: function(controller) {
     var location, url;
     location = this.container.lookup('location:' + 'hash');
-    url = location.getURL();
-    url = "/" + url.split("/")[1];
-    if (url !== "/") {
-      url = "/" + this._controllerName(controller);
-    }
+
+//    url = location.getURL();
+//    url = "/" + url.split("/")[1];
+//    if (url !== "/") {
+//      url = "/" + this._controllerName(controller);
+//    }
     return this.controllerFor("navigation").set('activeMenu', url);
   },
   _setAction: function(action) {
@@ -49,13 +50,13 @@ var ControllerMixin = Ember.Mixin.create({
     }
   },
   _setupBreadscrumbs: function(controller, model) {
-    return Admin.Logics.Breadcrumbs.setup(this.action, controller, model, this.controllerFor('breadcrumbs'));
+    return Breadcrumbs.setup(this.action, controller, model, this.controllerFor('breadcrumbs'));
   },
   _setType: function(controller, type) {
     return controller.set('__type', type.toString().replace("Admin.", ""));
   },
   _setSiteTitle: function(controller, model) {
-    return Admin.Logics.SiteTile.setup(this._controllerName(controller), model, this.action);
+    return SiteTile.setup(this._controllerName(controller), model, this.action);
   }
 });
 

@@ -69,4 +69,11 @@ module.exports = {
       dest: 'dist/'
     }]
   },
+
+  extrasToResult: {
+    expand: true,
+    cwd: 'vendor/bootstrap/dist',
+    src: 'fonts/*',
+    dest: 'tmp/result/'
+  },
 };

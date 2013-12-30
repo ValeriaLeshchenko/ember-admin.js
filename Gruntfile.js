@@ -165,6 +165,7 @@ module.exports = function(grunt) {
         "buildTemplates:dist",
         "buildScripts",
         "buildStyles",
+        "buildExtras",
         "buildIndexHTML:dist"
       ],
       buildDebug: [
@@ -207,6 +208,10 @@ module.exports = function(grunt) {
                      'copy:cssToResult'
                      // ToDo: Add 'autoprefixer'
                      ]));
+
+  grunt.registerTask('buildExtras', [
+    'copy:extrasToResult'
+  ]);
 
   // Index HTML
   grunt.registerTask('buildIndexHTML:dist', [

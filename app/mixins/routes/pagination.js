@@ -1,4 +1,4 @@
-// Add logic
+import Pagination from "appkit/logic/pagination";
 
 var PaginationMixin = Ember.Mixin.create({
   pagination: function(modelName) {
@@ -19,7 +19,7 @@ var PaginationMixin = Ember.Mixin.create({
     controller.set('__page', this.page);
     controller.set('__controller_name', this._controllerName(controller));
     controller.set('__model_name', this.modelName);
-    return Admin.Logics.Pagination.setup(controller, this.page);
+    return Pagination.setup(controller, this.page);
   }
 });
 

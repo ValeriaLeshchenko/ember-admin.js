@@ -1,0 +1,27 @@
+table.table-striped
+  = partial "base/actions/batch"
+  thead
+    tr
+      th
+        view 'base/actions/check_box_batch' selectAll=true elementId="select-all-batches"
+      each attributeName in controller.tableAttributes
+        th= attributeName
+      th Actions
+  tbody
+    each item in controller.model.items
+      tr
+        td
+          view 'base/actions/check_box_batch' contextBinding="item"
+        each attributeName in controller.tableAttributes
+          view 'base/table/td' contextBinding="item" attributeNameBinding="attributeName"
+        td.actions
+          if controller.collectionActions
+            = partial "base/actions/base"
+          = partial "base/actions/addition"
+    else
+      if controller.model.items.isLoaded
+        tr: td: span.glyphicon.glyphicon-exclamation-sign: |Empty
+      else
+        tr: td: span.glyphicon.glyphicon-refresh.glyphicon-refresh
+
+partial "base/pagination"

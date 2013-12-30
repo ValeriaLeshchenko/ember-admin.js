@@ -1,0 +1,8 @@
+if navigation.divider
+  li.divider
+if navigation.hasChildren
+  = partial "navigation/collection"
+else
+  view 'navigation/content' contextBinding="navigation"
+    a{{bind-attr href="navigation.url"}}
+      = navigation.title
