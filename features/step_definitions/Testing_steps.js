@@ -16,6 +16,7 @@ addStepDefinitions(function (scenario) {
 
   scenario.Before(function (callback) {
     // Use a custom utility function
+//    window.App = startApp();
     this.appSpecificUtilityFunction();
 
     callback();
@@ -45,6 +46,7 @@ addStepDefinitions(function (scenario) {
   });
 
   scenario.After(function (callback) {
+//    Ember.run(App, 'destroy');
     callback();
   });
 });

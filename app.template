@@ -3,5 +3,7 @@
 </div>
 
 <script type='text/javascript'>
+  Ember.testing = true;
+
   startCucumberRun();
 </script>
