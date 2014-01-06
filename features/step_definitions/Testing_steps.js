@@ -1,53 +1,28 @@
-// This addStepDefinitions() function is why the step definitions must
-// be configured to load after the adapter.
-addStepDefinitions(function (scenario) {
-  // Provide a custom World constructor. It's optional, a default one is supplied.
-  scenario.World = function (callback) {
-    callback();
-  };
+function Testing_steps() {
+  var firstNumber;
+  var secondNumber;
+  var sum = 0;
 
-
-  // Define your World, here is where you can add some custom utlity functions you
-  // want to use with your Cucumber step definitions, this is usually moved out
-  // to its own file that you include in your Karma config
-  var proto = scenario.World.prototype;
-  proto.appSpecificUtilityFunction = function someHelperFunc() {
-    // do some common stuff with your app
-  };
-
-
-  // Before scenario hoooks
-  scenario.Before(function (callback) {
-    // Use a custom utility function
-    this.appSpecificUtilityFunction();
-
+  this.Given(/^I have the number (\d+) and (\d+)$/, function(arg1, arg2, callback) {
+    console.info(document);
+    firstNumber = parseInt(arg1);
+    secondNumber = parseInt(arg2);
     callback();
   });
 
-
-  scenario.Given(/^some predetermined state$/, function(callback) {
-    // Verify or set up an app state
-
-    // Move to next step
+  this.When(/^I add them together$/, function(callback) {
+    sum = firstNumber + secondNumber;
     callback();
   });
 
-  scenario.When(/^the user takes an action$/, function(callback) {
-    // Trigger some user action
-
-    // Move to next step
+  this.Then(/^I should have (\d+)$/, function(arg1, callback) {
+    var expectedSum = parseInt(arg1);
+    if (expectedSum !== sum) {
+      throw new Error('It doesn\'t add up! ' + arg1 + ' !== ' + sum);
+    }
     callback();
   });
 
-  scenario.Then(/^the app does something$/, function(callback) {
-    // Verify the expected outcome
+};
 
-    // Move to next step
-    callback();
-  });
-
-  // After scenario hooks
-  scenario.After(function (callback) {
-    callback();
-  });
-});
+module.exports = Testing_steps;

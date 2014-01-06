@@ -13,11 +13,7 @@ module.exports = function(config) {
       "dist/ember-admin.min.js",
       "dist/ember-admin.css",
       "tests/helpers/*.js",
-      'node_modules/karma-cucumberjs/lib/adapter.js',
-      {pattern: 'node_modules/karma-cucumberjs/app.template', watched: false, included: false, served: true},
       "tests/test_helper.js",
-      {pattern: 'features/**/*.feature', watched: true, included: false, served: true},
-      {pattern: 'features/step_definitions/**/*.js', watched: true, included: true, served: true},
       "tests/units/**/*.js",
       "tests/acceptance/**/*.js"
     ],

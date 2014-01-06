@@ -65,7 +65,14 @@ module.exports = function(grunt) {
             }
         },
         // karma:ci, karma:dev, karma:sever, karma:browsers in ./tasks/karma
-        karma: require('./tasks/karma')
+        karma: require('./tasks/karma'),
+
+        cucumberjs: {
+          src: 'features',
+          options: {
+            steps: "features/step_definitions"
+          }
+        }
     });
 
     require('load-grunt-tasks')(grunt);
