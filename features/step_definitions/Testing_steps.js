@@ -4,7 +4,6 @@ function Testing_steps() {
   var sum = 0;
 
   this.Given(/^I have the number (\d+) and (\d+)$/, function(arg1, arg2, callback) {
-    console.info(document);
     firstNumber = parseInt(arg1);
     secondNumber = parseInt(arg2);
     callback();

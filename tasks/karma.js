@@ -10,7 +10,7 @@ module.exports = {
     ]
   },
   ci: {
-    singleRun: true,
+    singleRun: true
   },
   dev: {
     autoWatch: true,
@@ -23,6 +23,24 @@ module.exports = {
       dir : 'coverage/'
     }
   },
+
+  cucumber: {
+    configFile: "karma.conf.js",
+    singleRun: false,
+    browsers: ["PhantomJS"],
+    plugins: [
+      'karma-qunit',
+      'karma-ember-preprocessor',
+      'karma-phantomjs-launcher'
+    ],
+    files: [
+      {pattern: 'app.template', watched: false, included: false, served: true},
+      {pattern: 'features/**/*.feature', watched: true, included: false, served: true},
+      {pattern: 'node_modules/karma-cucumberjs/lib/adapter.js', watched: false, included: true, served: true},
+      {pattern: 'features/step_definitions/*.js', watched: true, included: true, served: true}
+    ]
+  },
+
   browsers: {
     singleRun: true,
     plugins: [

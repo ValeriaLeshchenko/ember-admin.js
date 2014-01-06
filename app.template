@@ -1,0 +1,7 @@
+<div id="ember-testing-container">
+    <div id="ember-testing"></div>
+</div>
+
+<script type='text/javascript'>
+  startCucumberRun();
+</script>
