@@ -47,6 +47,7 @@
     "karma-jasmine": "~0.1.5",
     "karma-requirejs": "~0.2.1",
     "karma-coffee-preprocessor": "~0.1.2",
-    "phantomjs" : "1.9.1-0"
+    "phantomjs": "1.9.1-0",
+    "karma-cucumberjs": "0.0.1"
   }
 }
